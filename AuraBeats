@@ -3,21 +3,60 @@
 AuraBeats - Premium Telegram Music Bot
 Entry point: python AuraBeats
 """
-import sys
+import asyncio
+
+from utils.logger import get_logger, setup as setup_logger
+setup_logger()
+log = get_logger("AuraBeats")
 
 BANNER = r"""
 ==========================================
-         AuraBeats  -  v0.1
+         AuraBeats  -  v0.2
    Premium Telegram Music Bot
-   Structure loaded - ready for code
 ==========================================
 """
 
-def main():
+
+async def main():
     print(BANNER)
-    print("-> Premium file structure in place.")
-    print("-> Phase 2: fill modules file-by-file.")
-    return 0
+
+    from config import validate, SESSION
+    if not validate():
+        log.error("Missing credentials — check .env")
+        return
+
+    from core.bot import bot
+    from core.userbot import start_assistant, stop_assistant
+    from core.calls import start_engine, stop_engine
+    from core.database import db
+
+    try:
+        await db.connect()
+        me = await bot.start_bot()
+
+        if SESSION:
+            await start_assistant()
+            await start_engine()
+
+        log.info(f"AuraBeats LIVE as @{me.username}")
+        log.info("Press Ctrl+C to stop")
+
+        await asyncio.Event().wait()
+
+    except KeyboardInterrupt:
+        log.info("Shutdown requested")
+    except Exception as e:
+        log.exception(f"Fatal error: {e}")
+    finally:
+        await stop_engine()
+        await stop_assistant()
+        await bot.stop_bot()
+        await db.close()
+        log.info("Goodbye")
+
 
 if __name__ == "__main__":
-    sys.exit(main())
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        pass
