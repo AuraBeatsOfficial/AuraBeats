@@ -1,0 +1,13 @@
+.env
+__pycache__/
+*.pyc
+*.pyo
+*.session
+*.session-journal
+*.log
+downloads/
+cache/
+.venv/
+venv/
+.DS_Store
+*.bak

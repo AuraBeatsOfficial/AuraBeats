@@ -1,0 +1,10 @@
+version: "3.9"
+services:
+  aurabeats:
+    build: .
+    container_name: aurabeats
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - ./downloads:/app/downloads
+    command: python AuraBeats

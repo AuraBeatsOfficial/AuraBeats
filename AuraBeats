@@ -1,0 +1,23 @@
+#!/usr/bin/env python3
+"""
+AuraBeats - Premium Telegram Music Bot
+Entry point: python AuraBeats
+"""
+import sys
+
+BANNER = r"""
+==========================================
+         AuraBeats  -  v0.1
+   Premium Telegram Music Bot
+   Structure loaded - ready for code
+==========================================
+"""
+
+def main():
+    print(BANNER)
+    print("-> Premium file structure in place.")
+    print("-> Phase 2: fill modules file-by-file.")
+    return 0
+
+if __name__ == "__main__":
+    sys.exit(main())
